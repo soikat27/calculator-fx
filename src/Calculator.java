@@ -61,31 +61,73 @@ public class Calculator extends Application {
     {
         // create the calculator screen
 		screen = new TextField();
+        styleTextField (screen);
 
 		// create the buttons
 		button0 = new Button("0");
+		createStyledButton(button0);
+
 		button1 = new Button("1");
+		createStyledButton(button1);
+
 		button2 = new Button("2");
+		createStyledButton(button2);
+
 		button3 = new Button("3");
+		createStyledButton(button3);
+
 		button4 = new Button("4");
+		createStyledButton(button4);
+
 		button5 = new Button("5");
+		createStyledButton(button5);
+
 		button6 = new Button("6");
+		createStyledButton(button6);
+
 		button7 = new Button("7");
+		createStyledButton(button7);
+
 		button8 = new Button("8");
+		createStyledButton(button8);
+
 		button9 = new Button("9");
+		createStyledButton(button9);
 		
+
 		buttonPlus = new Button("+");
+		createStyledButton(buttonPlus);
+
 		buttonMinus = new Button("-");
+		createStyledButton(buttonMinus);
+
 		buttonMult = new Button("*");
+		createStyledButton(buttonMult);
+
 		buttonDiv = new Button("/");
-		buttonExp = new Button("^");	
+		createStyledButton(buttonDiv);
+		
+
+		buttonExp = new Button("^");
+		createStyledButton(buttonExp);
+		
 
 		buttonLPar = new Button("(");
+		createStyledButton(buttonLPar);
+
 		buttonRPar = new Button(")");
+		createStyledButton(buttonRPar);
+		
 
 		buttonDot = new Button(".");
+		createStyledButton(buttonDot);
+		
+
 		buttonEqual = new Button("=");
+		createStyledButton(buttonEqual);
+
 		buttonClear = new Button("C");
+		createStyledButton(buttonClear);
 
         // instantiate the stacks
 		operator = new Stack<Operator> ();
@@ -400,6 +442,45 @@ public class Calculator extends Application {
 			operand.push(curNumber);
 			num = "";
 		}
+	}
+
+    public void createStyledButton (Button btn)
+	{
+		
+		btn.setMinSize(80, 34);
+		
+		btn.setStyle(
+				
+				"-fx-font-weight: bold;" +                        // Make the text bold
+				"-fx-background-color: linear-gradient(to bottom, #e0e9f1, #c0d2e4);" + // Light gradient color
+				"-fx-padding: 10;" +                              // Add padding
+				"-fx-border-color: #a0b8d8;" +                    // Light blue border color
+				"-fx-border-width: 1px;" +                        // Set border thickness
+				"-fx-border-radius: 5px;" +                       // Add rounded corners to the border
+				"-fx-background-radius: 5px;" +                   // Round the background corners as well
+				"-fx-font-size: 16px;"                            // Set font size for better readability
+			
+		);
+	}
+	
+	public void styleTextField(TextField textField)
+	{
+		
+	    textField.setStyle(
+	    		
+	        "-fx-background-color: #E6F7FF;" +  // Light blue background color
+	        "-fx-padding: 10;" +                // Add padding
+	        "-fx-border-color: #A8D8FF;" +      // Light blue border color
+	        "-fx-border-width: 2px;" +          // Set border thickness
+	        "-fx-border-radius: 5px;" +         // Rounded corners for the border
+	        "-fx-background-radius: 5px;" +     // Rounded corners for the background
+	        "-fx-font-size: 18px;" +            // Set font size for readability
+	        "-fx-font-weight: bold;" +          // Make the text bold
+	        "-fx-text-fill: #000000;"           // Set text color to black
+	    );
+	    
+	    textField.setMinHeight(40);                // Set minimum height for the text field
+	    textField.setAlignment(Pos.CENTER_RIGHT);  // Align text to the right
 	}
 
     public static void main(String[] args) 
