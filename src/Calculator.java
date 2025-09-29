@@ -13,127 +13,94 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import operators.*;
 
+/**
+ * {@code Calculator} is a JavaFX-based GUI calculator application that
+ * supports basic arithmetic operations (+, -, *, /), exponentiation (^),
+ * parentheses, and multi-digit input.
+ * <p>
+ * The calculator evaluates expressions using the classic **shunting-yard algorithm**
+ * (by Edsger Dijkstra) technique with two stacks:
+ * <ul>
+ *     <li>{@code operator} stack stores {@link Operator} instances</li>
+ *     <li>{@code operand} stack stores numeric values</li>
+ * </ul>
+ * It evaluates expressions using operator precedence and supports
+ * multi-digit numbers and decimal points.
+ * </p>
+ * <p>
+ * GUI elements include a {@link TextField} for the display and {@link Button}s
+ * arranged in a {@link GridPane} for input.
+ * </p>
+ */
 public class Calculator extends Application {
     
-    // the calculator dimensions
+    /** Width of the calculator window. */
 	public static int CALC_WIDTH  = 400;
+	/** Height of the calculator window. */
 	public static int CALC_HEIGHT = 200;
 
-    // the calculator screen
+    /** TextField representing the calculator display screen. */
 	private TextField screen;
 
-    // stacks
+    /** Stack to store operators for expression evaluation. */
 	private Stack<Operator> operator;
+	/** Stack to store operands (numbers) for evaluation. */
 	private Stack<Double>   operand;
 
-    // operand string
+    /** Current numeric input as a string (for multi-digit numbers). */
 	private String num;
 
-    // the calculator buttons
-	private Button button0;
-	private Button button1;
-	private Button button2;
-	private Button button3;
-	private Button button4;
-	private Button button5;
-	private Button button6;
-	private Button button7;
-	private Button button8;
-	private Button button9;
+    // Calculator buttons (0-9, operators, parentheses, dot, clear, equals)
+	private Button button0, button1, button2, button3, button4,
+                   button5, button6, button7, button8, button9;
 
-	private Button buttonPlus;
-	private Button buttonMinus;
-	private Button buttonMult;
-	private Button buttonDiv;
+	private Button buttonPlus, buttonMinus, buttonMult, buttonDiv, buttonExp;
 
-	private Button buttonExp;
+	private Button buttonLPar, buttonRPar;
 
-	private Button buttonLPar;
-	private Button buttonRPar;
+	private Button buttonDot, buttonClear, buttonEqual;
 
-	private Button buttonDot;
-
-	private Button buttonClear;
-	private Button buttonEqual;
-
+    /**
+     * JavaFX entry point. Sets up the stage, scene, display, and buttons.
+     * 
+     * @param primaryStage the primary stage for this application
+     */
     @Override
     public void start(Stage primaryStage) 
     {
         // create the calculator screen
 		screen = new TextField();
-        styleTextField (screen);
+		screen.setEditable(false);
+		styleTextField (screen);
 
 		// create the buttons
-		button0 = new Button("0");
-		createStyledButton(button0);
-
-		button1 = new Button("1");
-		createStyledButton(button1);
-
-		button2 = new Button("2");
-		createStyledButton(button2);
-
-		button3 = new Button("3");
-		createStyledButton(button3);
-
-		button4 = new Button("4");
-		createStyledButton(button4);
-
-		button5 = new Button("5");
-		createStyledButton(button5);
-
-		button6 = new Button("6");
-		createStyledButton(button6);
-
-		button7 = new Button("7");
-		createStyledButton(button7);
-
-		button8 = new Button("8");
-		createStyledButton(button8);
-
-		button9 = new Button("9");
-		createStyledButton(button9);
+		button0 = new Button("0");	createStyledButton(button0);
+		button1 = new Button("1");	createStyledButton(button1);
+		button2 = new Button("2");	createStyledButton(button2);
+		button3 = new Button("3");	createStyledButton(button3);
+		button4 = new Button("4");	createStyledButton(button4);
+		button5 = new Button("5");	createStyledButton(button5);
+		button6 = new Button("6");	createStyledButton(button6);
+		button7 = new Button("7");	createStyledButton(button7);
+		button8 = new Button("8");	createStyledButton(button8);
+		button9 = new Button("9");	createStyledButton(button9);
 		
-
-		buttonPlus = new Button("+");
-		createStyledButton(buttonPlus);
-
-		buttonMinus = new Button("-");
-		createStyledButton(buttonMinus);
-
-		buttonMult = new Button("*");
-		createStyledButton(buttonMult);
-
-		buttonDiv = new Button("/");
-		createStyledButton(buttonDiv);
+		buttonPlus = new Button("+");	createStyledButton(buttonPlus);
+		buttonMinus = new Button("-");	createStyledButton(buttonMinus);
+		buttonMult = new Button("*");	createStyledButton(buttonMult);
+		buttonDiv = new Button("/");	createStyledButton(buttonDiv);
+		buttonExp = new Button("^");	createStyledButton(buttonExp);
 		
-
-		buttonExp = new Button("^");
-		createStyledButton(buttonExp);
+		buttonLPar = new Button("(");	createStyledButton(buttonLPar);
+		buttonRPar = new Button(")");	createStyledButton(buttonRPar);
 		
+		buttonDot = new Button(".");	createStyledButton(buttonDot);
+		buttonEqual = new Button("=");	createStyledButton(buttonEqual);
+		buttonClear = new Button("C");	createStyledButton(buttonClear);
 
-		buttonLPar = new Button("(");
-		createStyledButton(buttonLPar);
-
-		buttonRPar = new Button(")");
-		createStyledButton(buttonRPar);
-		
-
-		buttonDot = new Button(".");
-		createStyledButton(buttonDot);
-		
-
-		buttonEqual = new Button("=");
-		createStyledButton(buttonEqual);
-
-		buttonClear = new Button("C");
-		createStyledButton(buttonClear);
-
-        // instantiate the stacks
+        // Initialize stacks and input string
 		operator = new Stack<Operator> ();
 		operand  = new Stack<Double> ();
-
-        // instantiate the string operand
 		num = "";
 
         // attach a handler to process button clicks
@@ -154,69 +121,53 @@ public class Calculator extends Application {
 		buttonMinus.setOnAction(handler);
 		buttonMult.setOnAction(handler);
 		buttonDiv.setOnAction(handler);
-
 		buttonExp.setOnAction(handler);
 
 		buttonLPar.setOnAction(handler);
 		buttonRPar.setOnAction(handler);
 
 		buttonDot.setOnAction(handler);
-
 		buttonEqual.setOnAction(handler);
 		buttonClear.setOnAction(handler);
 
         // setup a grid panel for the keypad
 		GridPane keypad = new GridPane();
-
 		keypad.setMinSize(CALC_WIDTH, CALC_HEIGHT); 
 		keypad.setPadding(new Insets(5, 5, 5, 5));
-
 		keypad.setVgap(5); 
 		keypad.setHgap(5);
-
 		keypad.setAlignment(Pos.CENTER);
 
         // attach the buttons to the keypad grid
 		keypad.add(button0, 0, 3);
-		keypad.add(button1, 0, 0); 
-		keypad.add(button2, 1, 0); 
-		keypad.add(button3, 2, 0);       
-		keypad.add(button4, 0, 1);
-		keypad.add(button5, 1, 1); 
-		keypad.add(button6, 2, 1); 
-		keypad.add(button7, 0, 2);       
-		keypad.add(button8, 1, 2);
-		keypad.add(button9, 2, 2);
+		keypad.add(button1, 0, 0);	keypad.add(button2, 1, 0);	keypad.add(button3, 2, 0);       
+		keypad.add(button4, 0, 1);	keypad.add(button5, 1, 1);	keypad.add(button6, 2, 1); 
+		keypad.add(button7, 0, 2);	keypad.add(button8, 1, 2);	keypad.add(button9, 2, 2);
 
-		keypad.add(buttonPlus, 3, 0); 
-		keypad.add(buttonMinus, 4, 0);       
-		keypad.add(buttonMult, 3, 1);
-		keypad.add(buttonDiv, 4, 1);
+		keypad.add(buttonPlus, 3, 0);	keypad.add(buttonMinus, 4, 0);       
+		keypad.add(buttonMult, 3, 1);	keypad.add(buttonDiv, 4, 1);
 		keypad.add(buttonExp, 3, 3);
 
-		keypad.add(buttonLPar, 3, 2);       
-		keypad.add(buttonRPar, 4, 2);
+		keypad.add(buttonLPar, 3, 2);	keypad.add(buttonRPar, 4, 2);
 
-		keypad.add(buttonDot, 1, 3);
-		keypad.add(buttonEqual, 2, 3);
-		keypad.add(buttonClear, 4, 3);
+		keypad.add(buttonDot, 1, 3);	keypad.add(buttonEqual, 2, 3);	keypad.add(buttonClear, 4, 3);
 
         // put screen and keypad together
 		BorderPane gui = new BorderPane();
-
 		gui.setTop(screen);
 		gui.setCenter(keypad);
 
         // set up the scene
 		Scene scene = new Scene(gui);
-
 		primaryStage.setTitle("Calculator");
 		primaryStage.setScene(scene);
-
 		primaryStage.show();
     }
 
-    // Handler for processing the button clicks
+    /**
+     * Handles button click events for the calculator.
+     * Uses {@link Operator} stack and operand stack to process input.
+     */
 	private class ButtonHandler implements EventHandler<ActionEvent>
 	{ 
 		@Override 
@@ -401,6 +352,7 @@ public class Calculator extends Application {
 				operator.clear();
 				operand.clear();
 			}
+
 			else if (e.getSource() == buttonClear)
 			{
 
@@ -414,7 +366,13 @@ public class Calculator extends Application {
 		}  
 	}
 
-    public void operate(Operator curOperator)
+	/**
+     * Processes the current operator with respect to operator precedence.
+     * Pops from the operator stack and evaluates as needed.
+     * 
+     * @param curOperator the operator to process
+     */
+    private void operate(Operator curOperator)
 	{
 		int curPrec = curOperator.getPrecedence();
 
@@ -433,7 +391,11 @@ public class Calculator extends Application {
 		operator.push(curOperator);
 	}
 
-    public void pushMultiDigit()
+	/**
+     * Pushes a multi-digit or decimal number currently in input string
+     * to the operand stack.
+     */
+    private void pushMultiDigit()
 	{
 		if (num != "")
 		{
@@ -444,7 +406,12 @@ public class Calculator extends Application {
 		}
 	}
 
-    public void createStyledButton (Button btn)
+	/**
+     * Styles a button for consistent appearance in the GUI.
+     * 
+     * @param btn the button to style
+     */
+    private void createStyledButton (Button btn)
 	{
 		
 		btn.setMinSize(80, 34);
@@ -463,7 +430,12 @@ public class Calculator extends Application {
 		);
 	}
 	
-	public void styleTextField(TextField textField)
+	/**
+     * Styles the TextField used as the calculator screen.
+     * 
+     * @param textField the TextField to style
+     */
+	private void styleTextField(TextField textField)
 	{
 		
 	    textField.setStyle(
@@ -483,6 +455,7 @@ public class Calculator extends Application {
 	    textField.setAlignment(Pos.CENTER_RIGHT);  // Align text to the right
 	}
 
+	/** Launches the JavaFX application. */
     public static void main(String[] args) 
     {
         launch(args);
