@@ -87,7 +87,7 @@ java --module-path "/path/to/javafx/lib" --add-modules javafx.controls,javafx.fx
 * Supports exponentiation: **`^`**
 * Supports **parentheses** for controlling operation precedence
 
-<img src="./doc/screenshots/calculator.png" alt="CalculatorFX Screenshot" width="200"/>
+<img src="./doc/screenshots/Calculator.png" alt="CalculatorFX Screenshot" width="200"/>
 
 #### Usage
 
